@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.controller.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +80,47 @@ public class UserSqlDAO implements UserDAO {
         return userCreated && accountCreated;
     }
 
-    private User mapRowToUser(SqlRowSet rs) {
+    
+
+	@Override
+	public BigDecimal getAccountBalance(int userId) {
+		BigDecimal response = jdbcTemplate.queryForObject("select accounts.balance from accounts where accounts.user_id = ?", BigDecimal.class, userId);
+		return response;
+	}
+
+	@Override
+	public List<Transfer> getListOfTransfers(int userId) {
+	
+		List<Transfer> listAllTransfers = new ArrayList<Transfer>();
+		return listAllTransfers;
+	}
+	
+	@Override
+	public Transfer getTransferDetails(int transferId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void transferFunds(Transfer transferRequest) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public String getUsernameFromAccountId(int accountId) {
+		SqlRowSet response = jdbcTemplate.queryForRowSet("select users.username JOIN accounts ON accounts.user_id = users.user_id where accounts.account_id = ?", accountId);
+		if (response.next()) {
+			
+			String username = response.getString(0);
+		
+			return username;
+		
+	}
+		return null;
+	}
+	
+	
+	private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
         user.setId(rs.getLong("user_id"));
         user.setUsername(rs.getString("username"));
@@ -87,4 +129,9 @@ public class UserSqlDAO implements UserDAO {
         user.setAuthorities("ROLE_USER");
         return user;
     }
+
+	
+
+
+
 }

@@ -8,8 +8,29 @@ public class Transfer {
 	private int account_from;
 	private int account_to;
 	private BigDecimal amount;
+	private String transferType;
+	private String transferStatus;
+	private String username;
 	
 	
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getTransferType() {
+		return transferType;
+	}
+	public void setTransferType(String transferType) {
+		this.transferType = transferType;
+	}
+	public String getTransferStatus() {
+		return transferStatus;
+	}
+	public void setTransferStatus(String transferStatus) {
+		this.transferStatus = transferStatus;
+	}
 	public int getTransferId() {
 		return transferId;
 	}

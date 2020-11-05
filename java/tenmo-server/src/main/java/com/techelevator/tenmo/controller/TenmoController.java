@@ -41,6 +41,7 @@ public class TenmoController {
 	@RequestMapping (path = "/transfers", method = RequestMethod.GET)
 	public List<Transfer> getListOfTransfers(@Valid Principal principal) {
 		int userId = userDAO.findIdByUsername(principal.getName());
+		System.out.println(userDAO.getListOfTransfers(userId).get(0).getUsername());
 		return userDAO.getListOfTransfers(userId);
 	}
 	

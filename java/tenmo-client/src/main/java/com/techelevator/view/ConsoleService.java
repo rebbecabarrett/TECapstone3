@@ -64,7 +64,7 @@ public class ConsoleService {
 		System.out.println("Registration successful. You can now login.");
 	}
 	
-
+	
 }	
 
 

@@ -39,6 +39,7 @@ public class App {
 
 		registerAndLogin();
 		mainMenu();
+		
 	}
 	
 	private void registerAndLogin() {
@@ -61,8 +62,9 @@ public class App {
 
 	private void mainMenu() {
           
-		console.printMainMenu();
+		String choice = console.printMainMenu(currentUser);
 
+		
 	}
 
 

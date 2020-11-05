@@ -11,6 +11,6 @@ public interface TransferDAO {
 	Transfer getTransferDetails(int transferId);
 
 
-	void insertTransfer(Transfer transferRequest);
+	Transfer insertTransfer(Transfer transferRequest);
 
 }

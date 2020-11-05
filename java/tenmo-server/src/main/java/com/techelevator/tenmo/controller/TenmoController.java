@@ -75,6 +75,7 @@ public class TenmoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping (path = "/transfers", method = RequestMethod.POST)
 	public Transfer transferFunds(@RequestBody Transfer transferRequest, Principal principal) {
+		Transfer returnedTransfer = transferRequest;
 		int userId = userDAO.findIdByUsername(principal.getName());
 		transferRequest.setUserIdFrom(userId);
 		BigDecimal accountBalanceOfSender = accountDAO.getAccountBalance(userId);
@@ -83,12 +84,12 @@ public class TenmoController {
 			accountDAO.withdrawMoneyFromAccount(transferRequest.getUserIdFrom(), transferRequest.getAmount());
 			transferRequest.setAccount_from(accountDAO.getAccountIdFromUserId(transferRequest.getUserIdFrom()));
 			transferRequest.setAccount_to(accountDAO.getAccountIdFromUserId(transferRequest.getUserIdTo()));
-			transferDAO.insertTransfer(transferRequest);
+			returnedTransfer = transferDAO.insertTransfer(transferRequest);
 			//status message success confirmation id
 		} else {
 			//status message fail insufficient funds
 		}
-		return transferRequest;
+		return returnedTransfer;
 	}
 	
 	

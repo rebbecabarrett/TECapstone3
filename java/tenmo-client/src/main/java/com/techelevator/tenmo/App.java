@@ -1,8 +1,11 @@
 package com.techelevator.tenmo;
 
 
+import java.math.BigDecimal;
+
 import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.UserCredentials;
+import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.AuthenticationServiceException;
 import com.techelevator.view.ConsoleService;
@@ -12,15 +15,22 @@ public class App {
 	private static final String API_BASE_URL = "http://localhost:8080/";
 	private static final String REGISTER = "1";
 	private static final String LOGIN = "2";
+	
+	private static final String GET_ACCOUNT_BALANCE = "1";
+	private static final String SEND_TE_BUCKS = "2";
+	private static final String VIEW_PAST_TRANSFERS = "3";
+	private static final String LOGIN_AS_DIFFERENT_USER = "4";
+	private static final String PROGRAM_EXIT = "5";
 
 
 	// we only want single instances of these. Be careful to not create multiple instances in your code. We just reuse what we have
 	private AuthenticatedUser currentUser;
 	private ConsoleService console;
 	private AuthenticationService authenticationService;
+	private AccountService accountService;
 
 	public static void main(String[] args) {
-		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
+		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL), new AccountService());
 		app.run();
 	}
 
@@ -30,9 +40,10 @@ public class App {
  * @param authenticationService
  * @param studentService
  */
-	public App(ConsoleService console, AuthenticationService authenticationService) {
+	public App(ConsoleService console, AuthenticationService authenticationService, AccountService accountService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
+		this.accountService = accountService;
 	}
 
 	public void run() {
@@ -62,8 +73,36 @@ public class App {
 
 	private void mainMenu() {
           
-		String choice = console.printMainMenu(currentUser);
+		while (true) {
+			String choice = console.printMainMenu(currentUser);
 
+			switch (choice) {
+
+			case GET_ACCOUNT_BALANCE:
+				System.out.println("Retrieving account balance ...");
+				//call a local/client-side service class to go fetch the list of students
+				BigDecimal accountBalance = accountService.getAccountBalance();
+				console.printAccountBalance(accountBalance);
+				
+				break;
+			case SEND_TE_BUCKS:
+				System.out.println("");
+				break;
+			case VIEW_PAST_TRANSFERS: 
+				System.out.println("Retrieving list of transfers ...");
+		
+				break;
+			case LOGIN_AS_DIFFERENT_USER:
+				registerAndLogin();
+				break;
+			case PROGRAM_EXIT:
+				System.out.println("Exiting... Good Bye!");
+				System.exit(1);
+			default:
+				System.out.println("Invalid Choice. Please try again!");
+
+			}
+		}
 		
 	}
 
@@ -102,6 +141,7 @@ public class App {
 			try {
 				// this is what calls the server to retrieve a JWT token (if successful)
 				currentUser = authenticationService.login(credentials);
+				accountService.setAUTH_TOKEN(currentUser.getToken());
 				
 			} catch (AuthenticationServiceException e) {
 				System.out.println("LOGIN ERROR: " + e.getMessage());

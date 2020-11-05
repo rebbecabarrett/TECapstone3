@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.techelevator.tenmo.controller.Transfer;
 
+@Component
 public class TransferSqlDAO implements TransferDAO {
 	
 	private JdbcTemplate jdbcTemplate;
@@ -62,8 +63,11 @@ public class TransferSqlDAO implements TransferDAO {
 	return transferDetails;}
 
 	@Override
-	public void transferFunds(Transfer transferRequest) {
-		// TODO Auto-generated method stub
+	public void insertTransfer(Transfer transferRequest) {
+		String insertTransfer = "INSERT INTO transfers (transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount)"
+				+ " VALUES (default, (SELECT transfer_type_id FROM transfer_types WHERE transfer_type_desc = 'Send'), (SELECT transfer_status_id FROM transfer_statuses "
+				+ " WHERE transfer_status_desc = 'Approved'), ?, ?, ?)";
+		jdbcTemplate.update(insertTransfer, transferRequest.getAccount_from(), transferRequest.getAccount_to(), transferRequest.getAmount());
 
 	}
 	

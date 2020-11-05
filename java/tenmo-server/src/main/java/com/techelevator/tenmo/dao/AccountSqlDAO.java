@@ -14,7 +14,7 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component 
 public class AccountSqlDAO implements AccountDAO {
 	
 	private JdbcTemplate jdbcTemplate;
@@ -42,6 +42,10 @@ public class AccountSqlDAO implements AccountDAO {
 		jdbcTemplate.update(sql, amountRequest, userIdFrom);
 	}
 
-
-
+	@Override
+	public int getAccountIdFromUserId(int userId) {
+		int response = jdbcTemplate.queryForObject("SELECT accounts.account_id FROM accounts JOIN transfers ON transfers.account_to = accounts.account_id OR transfers.account_from = accounts.account_id WHERE accounts.user_id = ?", int.class, userId);
+	return response;
+	}
+	
 }

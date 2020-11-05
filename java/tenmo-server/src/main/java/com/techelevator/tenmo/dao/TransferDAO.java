@@ -10,6 +10,7 @@ public interface TransferDAO {
 
 	Transfer getTransferDetails(int transferId);
 
-	void transferFunds(Transfer transferRequest);
+
+	void insertTransfer(Transfer transferRequest);
 
 }

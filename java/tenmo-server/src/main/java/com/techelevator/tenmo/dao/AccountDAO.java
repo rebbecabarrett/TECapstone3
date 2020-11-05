@@ -9,4 +9,6 @@ public interface AccountDAO {
 	void addMoneyToAccount(int userIdTo, BigDecimal amount);
 
 	void withdrawMoneyFromAccount(int userIdFrom, BigDecimal amount);
+	
+	int getAccountIdFromUserId(int userId);
 }

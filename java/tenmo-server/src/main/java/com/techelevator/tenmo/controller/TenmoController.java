@@ -75,8 +75,13 @@ public class TenmoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping (path = "/transfers", method = RequestMethod.POST)
 	public void transferFunds(@RequestBody Transfer transferRequest, Principal principal) {
-		
-		
+		int userId = userDAO.findIdByUsername(principal.getName());
+		transferRequest.setUserIdFrom(userId);
+		BigDecimal accountBalanceOfSender = accountDAO.getAccountBalance(userId);
+		if (accountBalanceOfSender.compareTo(transferRequest.getAmount()) ==1) {
+			accountDAO.addMoneyToAccount(transferRequest.getUserIdTo(), transferRequest.getAmount());
+			accountDAO.withdrawMoneyFromAccount(transferRequest.getUserIdFrom(), transferRequest.getAmount());
+		}
 		transferDAO.transferFunds(transferRequest);
 	}
 	

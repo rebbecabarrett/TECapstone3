@@ -29,5 +29,19 @@ public class AccountSqlDAO implements AccountDAO {
 				"select accounts.balance from accounts where accounts.user_id = ?", BigDecimal.class, userId);
 		return response;
 	}
+	
+	@Override
+	public void addMoneyToAccount(int userIdTo, BigDecimal amountRequest) {
+		String sql = "update accounts set balance = balance  + ? WHERE user_id = ?";
+		jdbcTemplate.update(sql, amountRequest, userIdTo);
+	}
+	
+	@Override
+	public void withdrawMoneyFromAccount(int userIdFrom, BigDecimal amountRequest) {
+		String sql = "update accounts set balance = balance  - ? WHERE user_id = ?";
+		jdbcTemplate.update(sql, amountRequest, userIdFrom);
+	}
+
+
 
 }

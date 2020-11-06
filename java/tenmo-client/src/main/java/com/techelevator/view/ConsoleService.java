@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.Transfer;
+import com.techelevator.tenmo.models.User;
 
 
 public class ConsoleService {
@@ -91,12 +92,12 @@ public class ConsoleService {
 
 }
 
-	public int transferDetailMenuSubHandler() {
+	public String transferDetailMenuSubHandler() {
 		
 		System.out.println("\n");
 		System.out.println("Please enter transfer id to view details:\n");
 		
-		return in.nextInt();	
+		return in.nextLine();	
 	}
 
 	public void printTransferDetails(Transfer transferDetails) {
@@ -109,7 +110,33 @@ public class ConsoleService {
 		
 	}
 
+	public void sendDetailsSubMenuHandler(AuthenticatedUser currentUser) {
+		System.out.println("\n");
+		System.out.println("Enter ID of user you are sending to:\n");
+		System.out.println("Enter Amount:\n");
+	}
+
+	public void printListOfUsers(User[] listOfUsers, AuthenticatedUser currentUser) {
+		String currentUsername = currentUser.getUser().getUsername();
+		System.out.println(
+				"------------------------------------------");
+		System.out.printf("%-20s %-20s\n", "Users ID", "Name");
+		System.out.println(
+				"------------------------------------------");
+		for (int i=0; i<listOfUsers.length; i++ ) {
+			if (listOfUsers[i].getUsername().contains(currentUsername)) {
+				
+			}
+				
+			else {
+				System.out.printf("%-20s %-20s\n", listOfUsers[i].getId(), listOfUsers[i].getUsername());
+			}
+		}
+	}
+		
+	}
+
 	
-}
+
 
 

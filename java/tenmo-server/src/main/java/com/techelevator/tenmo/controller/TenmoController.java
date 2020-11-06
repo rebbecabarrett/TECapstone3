@@ -87,9 +87,14 @@ public class TenmoController {
 		if (accountBalanceOfSender.compareTo(transferRequest.getAmount()) == 1) {
 			accountDAO.addMoneyToAccount(transferRequest.getUserIdTo(), transferRequest.getAmount());
 			accountDAO.withdrawMoneyFromAccount(transferRequest.getUserIdFrom(), transferRequest.getAmount());
+			int accountIdTo = accountDAO.getAccountIdFromUserId(transferRequest.getUserIdTo());
 			transferRequest.setAccount_from(accountDAO.getAccountIdFromUserId(transferRequest.getUserIdFrom()));
 			transferRequest.setAccount_to(accountDAO.getAccountIdFromUserId(transferRequest.getUserIdTo()));
 			returnedTransfer = transferDAO.insertTransfer(transferRequest);
+			returnedTransfer.setTransferStatus("Approved");
+			returnedTransfer.setTransferType("Send");
+			returnedTransfer.setUsernameFrom(principal.getName());
+			returnedTransfer.setUsernameTo(userDAO.getUsernameFromAccountId(accountIdTo));
 			//status message success confirmation id
 		} else {
 			//status message fail insufficient funds

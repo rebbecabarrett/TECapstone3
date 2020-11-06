@@ -72,18 +72,42 @@ public class ConsoleService {
 		
 	}
 
-	public void printListOfTransfers(Transfer[] listOfTransfers) {
+	public void printListOfTransfers(Transfer[] listOfTransfers, AuthenticatedUser currentUser) {
+		String currentUsername = currentUser.getUser().getUsername();
+		System.out.println(
+				"-------------------------------------------------------------------");
+		System.out.printf("%-20s %-20s      %-20s\n", "Transfer ID", "From/To", "Amount");
+		System.out.println(
+				"-------------------------------------------------------------------");
 		for (int i=0; i<listOfTransfers.length; i++ ) {
-			if(listOfTransfers[i].getTransferType().contains("Send")) {
-				System.out.println(listOfTransfers[i].getTransferId() + " " + listOfTransfers[i].getUsernameTo() + " $" + listOfTransfers[i].getAmount());
+			if (listOfTransfers[i].getUsernameFrom().contains(currentUsername))
+				System.out.printf("%-20s To:   %-20s $%-5s\n", listOfTransfers[i].getTransferId(), listOfTransfers[i].getUsernameTo(), listOfTransfers[i].getAmount());
+			else if (listOfTransfers[i].getUsernameTo().contains(currentUsername)) {
+				System.out.printf("%-20s From: %-20s $%-5s\n", listOfTransfers[i].getTransferId(), listOfTransfers[i].getUsernameFrom(), listOfTransfers[i].getAmount());
 			}
-			if(listOfTransfers[i].getTransferType().contains("Request"))
-				System.out.println(listOfTransfers[i].getTransferId() + " " + listOfTransfers[i].getUsernameFrom() + " $" + listOfTransfers[i].getAmount());
 		
 	}
 	
 
 }
+
+	public int transferDetailMenuSubHandler() {
+		
+		System.out.println("\n");
+		System.out.println("Please enter transfer id to view details:\n");
+		
+		return in.nextInt();	
+	}
+
+	public void printTransferDetails(Transfer transferDetails) {
+		System.out.println("Id: " + transferDetails.getTransferId());
+		System.out.println("Account From: " + transferDetails.getUsernameFrom());
+		System.out.println("Account To: " + transferDetails.getUsernameTo());
+		System.out.println("Type: " + transferDetails.getTransferType());
+		System.out.println("Status: " + transferDetails.getTransferStatus());
+		System.out.println("Amount: $" + transferDetails.getAmount());
+		
+	}
 
 	
 }

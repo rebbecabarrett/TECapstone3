@@ -33,6 +33,19 @@ public class TransferService {
 	
 	public void setAUTH_TOKEN(String token) {
 		AUTH_TOKEN = token;		
+	}
+
+	public Transfer getTransferDetails(int transferId) {
+		Transfer transferDetails = null;
+		
+		HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_JSON);
+	    headers.setBearerAuth(AUTH_TOKEN);
+	    
+	    HttpEntity<Transfer> entity = new HttpEntity<Transfer>(headers);
+	    
+	    transferDetails = restTemplate.exchange(BASE_URL + "/transfers/" + transferId, HttpMethod.GET, entity, Transfer.class).getBody();
+		return transferDetails;
 	}	
 	
 	

@@ -95,7 +95,15 @@ public class App {
 			case VIEW_PAST_TRANSFERS: 
 				System.out.println("Retrieving list of transfers ...");
 				Transfer[] listOfTransfers = transferService.getListOfTransfers();
-				console.printListOfTransfers(listOfTransfers);
+				console.printListOfTransfers(listOfTransfers, currentUser);
+				int transferId = console.transferDetailMenuSubHandler();
+				if (transferId == 0) {
+					console.printMainMenu(currentUser);
+				}
+				else {
+					Transfer transferDetails = transferService.getTransferDetails(transferId);
+					console.printTransferDetails(transferDetails);
+				}
 		
 				break;
 			case LOGIN_AS_DIFFERENT_USER:
@@ -113,7 +121,8 @@ public class App {
 	}
 
 
-    /*
+
+	/*
      * This method determines if we cab=n break out of the registerAndLogin() loop above. If we
      * have a currentUser, then we know that a successful login occurred and we got back a JWT token
      */

@@ -17,6 +17,7 @@ public class ConsoleService {
 	private PrintWriter out;
 	private Scanner in;
 	public String AUTH_TOKEN = "";
+	
 
 	public ConsoleService(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output, true);
@@ -95,7 +96,7 @@ public class ConsoleService {
 	public String transferDetailMenuSubHandler() {
 		
 		System.out.println("\n");
-		System.out.println("Please enter transfer id to view details:\n");
+		System.out.println("Please enter transfer id to view details (or press 0 to cancel):\n");
 		
 		return in.nextLine();	
 	}
@@ -110,10 +111,19 @@ public class ConsoleService {
 		
 	}
 
-	public void sendDetailsSubMenuHandler(AuthenticatedUser currentUser) {
+	public Transfer sendDetailsSubMenuHandler(AuthenticatedUser currentUser) {
+		Transfer requestTransfer = new Transfer();
 		System.out.println("\n");
 		System.out.println("Enter ID of user you are sending to:\n");
+		String userIdAsString = in.nextLine();
+		int userIdTo = Integer.parseInt(userIdAsString);
+		requestTransfer.setUserIdTo(userIdTo);
 		System.out.println("Enter Amount:\n");
+		String amountAsString = in.nextLine();
+		BigDecimal amount = new BigDecimal(amountAsString);
+		requestTransfer.setAmount(amount);
+		
+		return requestTransfer;
 	}
 
 	public void printListOfUsers(User[] listOfUsers, AuthenticatedUser currentUser) {
@@ -133,6 +143,8 @@ public class ConsoleService {
 			}
 		}
 	}
+
+
 		
 	}
 

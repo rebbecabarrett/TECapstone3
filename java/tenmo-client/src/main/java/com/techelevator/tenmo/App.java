@@ -1,6 +1,5 @@
 package com.techelevator.tenmo;
 
-
 import java.math.BigDecimal;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
@@ -19,15 +18,15 @@ public class App {
 	private static final String API_BASE_URL = "http://localhost:8080/";
 	private static final String REGISTER = "1";
 	private static final String LOGIN = "2";
-	
+
 	private static final String GET_ACCOUNT_BALANCE = "1";
 	private static final String SEND_TE_BUCKS = "2";
 	private static final String VIEW_PAST_TRANSFERS = "3";
 	private static final String LOGIN_AS_DIFFERENT_USER = "4";
 	private static final String PROGRAM_EXIT = "5";
 
-
-	// we only want single instances of these. Be careful to not create multiple instances in your code. We just reuse what we have
+	// we only want single instances of these. Be careful to not create multiple
+	// instances in your code. We just reuse what we have
 	private AuthenticatedUser currentUser;
 	private ConsoleService console;
 	private AuthenticationService authenticationService;
@@ -36,17 +35,20 @@ public class App {
 	private UserService userService;
 
 	public static void main(String[] args) {
-		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL), new AccountService(), new TransferService(), new UserService());
+		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL),
+				new AccountService(), new TransferService(), new UserService());
 		app.run();
 	}
 
-/**
- *  This constructor is passed the services from main() above
- * @param console  (the console service)
- * @param authenticationService
- * @param studentService
- */
-	public App(ConsoleService console, AuthenticationService authenticationService, AccountService accountService, TransferService transferService, UserService userService) {
+	/**
+	 * This constructor is passed the services from main() above
+	 * 
+	 * @param console               (the console service)
+	 * @param authenticationService
+	 * @param studentService
+	 */
+	public App(ConsoleService console, AuthenticationService authenticationService, AccountService accountService,
+			TransferService transferService, UserService userService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
 		this.accountService = accountService;
@@ -58,15 +60,15 @@ public class App {
 
 		registerAndLogin();
 		mainMenu();
-		
+
 	}
-	
+
 	private void registerAndLogin() {
 		while (!isAuthenticated()) {
 			String choice = console.printLoginMenu();
-			
+
 			switch (choice) {
-			case LOGIN: 
+			case LOGIN:
 				login();
 				break;
 			case REGISTER:
@@ -74,8 +76,8 @@ public class App {
 				break;
 			default:
 				System.out.println("Invalid Choice. Please try again!");
-			    
-			}			
+
+			}
 		}
 	}
 
@@ -96,24 +98,30 @@ public class App {
 			case SEND_TE_BUCKS:
 				User[] listOfUsers = userService.getListOfUsers();
 				console.printListOfUsers(listOfUsers, currentUser);
-				console.sendDetailsSubMenuHandler(currentUser);
+				Transfer requestTransfer = console.sendDetailsSubMenuHandler(currentUser);
+				Transfer returnedTransfer = transferService.transferFunds(requestTransfer);
+				console.printTransferDetails(returnedTransfer);
 				break;
+				
 			case VIEW_PAST_TRANSFERS: 
 				System.out.println("Retrieving list of transfers ...");
 				Transfer[] listOfTransfers = transferService.getListOfTransfers();
 				console.printListOfTransfers(listOfTransfers, currentUser);
 				int transferId = Integer.parseInt(console.transferDetailMenuSubHandler());
+				boolean finished = false;
+				while (!finished) {
 				if (transferId == 0) {
 					console.printMainMenu(currentUser);
+					finished = true;
 				}
-				else {
-					for (Transfer t: listOfTransfers) {
+				for (Transfer t: listOfTransfers) {
 					if (t.getTransferId() == transferId) {
 					console.printTransferDetails(t);
+					finished = true;
 					}
-					}
+			
 				}
-					
+				}
 		
 				break;
 			case LOGIN_AS_DIFFERENT_USER:
@@ -130,18 +138,17 @@ public class App {
 		
 	}
 
-
-
 	/*
-     * This method determines if we cab=n break out of the registerAndLogin() loop above. If we
-     * have a currentUser, then we know that a successful login occurred and we got back a JWT token
-     */
+	 * This method determines if we cab=n break out of the registerAndLogin() loop
+	 * above. If we have a currentUser, then we know that a successful login
+	 * occurred and we got back a JWT token
+	 */
 	private boolean isAuthenticated() {
 		return currentUser != null;
 	}
 
 	private void register() {
-		
+
 		boolean isRegistered = false;
 		while (!isRegistered) // will keep looping until user is registered
 		{
@@ -169,7 +176,7 @@ public class App {
 				accountService.setAUTH_TOKEN(currentUser.getToken());
 				transferService.setAUTH_TOKEN(currentUser.getToken());
 				userService.setAUTH_TOKEN(currentUser.getToken());
-				
+
 			} catch (AuthenticationServiceException e) {
 				System.out.println("LOGIN ERROR: " + e.getMessage());
 				System.out.println("Please attempt to login again.");
@@ -183,11 +190,11 @@ public class App {
 		String password = console.getUserInput("Password");
 		return new UserCredentials(username, password);
 	}
-	
+
 	private UserCredentials registerUserCredentials() {
 		console.printRegisterNewUserPrompt();
 		String username = console.getUserInput("Username");
 		String password = console.getUserInput("Password");
 		return new UserCredentials(username, password);
-	}	
+	}
 }

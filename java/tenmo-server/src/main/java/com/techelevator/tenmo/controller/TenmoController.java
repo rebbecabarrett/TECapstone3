@@ -89,6 +89,8 @@ public class TenmoController {
 			accountDAO.withdrawMoneyFromAccount(transferRequest.getUserIdFrom(), transferRequest.getAmount());
 			transferRequest.setAccount_from(accountDAO.getAccountIdFromUserId(transferRequest.getUserIdFrom()));
 			transferRequest.setAccount_to(accountDAO.getAccountIdFromUserId(transferRequest.getUserIdTo()));
+			transferRequest.setTransferStatus("Approved");
+			transferRequest.setTransferType("Send");
 			returnedTransfer = transferDAO.insertTransfer(transferRequest);
 			//status message success confirmation id
 		} else {

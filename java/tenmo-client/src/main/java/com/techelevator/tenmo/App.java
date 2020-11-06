@@ -106,8 +106,7 @@ public class App {
 			case VIEW_PAST_TRANSFERS: 
 				System.out.println("Retrieving list of transfers ...");
 				Transfer[] listOfTransfers = transferService.getListOfTransfers();
-				console.printListOfTransfers(listOfTransfers, currentUser);
-				int transferId = Integer.parseInt(console.transferDetailMenuSubHandler());
+				int transferId = Integer.parseInt(console.printListOfTransfers(listOfTransfers, currentUser));
 				boolean finished = false;
 				while (!finished) {
 				if (transferId == 0) {
@@ -125,7 +124,7 @@ public class App {
 		
 				break;
 			case LOGIN_AS_DIFFERENT_USER:
-				registerAndLogin();
+				
 				break;
 			case PROGRAM_EXIT:
 				System.out.println("Exiting... Good Bye!");

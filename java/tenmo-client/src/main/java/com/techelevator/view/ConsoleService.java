@@ -8,12 +8,14 @@ import java.math.BigDecimal;
 import java.util.Scanner;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.Transfer;
 
 
 public class ConsoleService {
 
 	private PrintWriter out;
 	private Scanner in;
+	public String AUTH_TOKEN = "";
 
 	public ConsoleService(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output, true);
@@ -69,8 +71,21 @@ public class ConsoleService {
 		System.out.println("Your current account balance is: $" + accountBalance);
 		
 	}
+
+	public void printListOfTransfers(Transfer[] listOfTransfers) {
+		for (int i=0; i<listOfTransfers.length; i++ ) {
+			if(listOfTransfers[i].getTransferType().contains("Send")) {
+				System.out.println(listOfTransfers[i].getTransferId() + " " + listOfTransfers[i].getUsernameTo() + " $" + listOfTransfers[i].getAmount());
+			}
+			if(listOfTransfers[i].getTransferType().contains("Request"))
+				System.out.println(listOfTransfers[i].getTransferId() + " " + listOfTransfers[i].getUsernameFrom() + " $" + listOfTransfers[i].getAmount());
+		
+	}
 	
+
+}
+
 	
-}	
+}
 
 

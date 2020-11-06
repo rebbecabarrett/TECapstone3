@@ -28,10 +28,11 @@ public class AccountService {
 	    
 		return accountBalance;
 	}
-
+	
 	public void setAUTH_TOKEN(String token) {
-		AUTH_TOKEN = token;
-		
-	}
+		AUTH_TOKEN = token;		
+	}	
+
+	
 
 }

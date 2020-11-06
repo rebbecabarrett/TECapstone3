@@ -4,10 +4,12 @@ package com.techelevator.tenmo;
 import java.math.BigDecimal;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.AuthenticationServiceException;
+import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.view.ConsoleService;
 
 public class App {
@@ -28,9 +30,10 @@ public class App {
 	private ConsoleService console;
 	private AuthenticationService authenticationService;
 	private AccountService accountService;
+	private TransferService transferService;
 
 	public static void main(String[] args) {
-		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL), new AccountService());
+		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL), new AccountService(), new TransferService());
 		app.run();
 	}
 
@@ -40,10 +43,11 @@ public class App {
  * @param authenticationService
  * @param studentService
  */
-	public App(ConsoleService console, AuthenticationService authenticationService, AccountService accountService) {
+	public App(ConsoleService console, AuthenticationService authenticationService, AccountService accountService, TransferService transferService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
 		this.accountService = accountService;
+		this.transferService = transferService;
 	}
 
 	public void run() {
@@ -90,6 +94,8 @@ public class App {
 				break;
 			case VIEW_PAST_TRANSFERS: 
 				System.out.println("Retrieving list of transfers ...");
+				Transfer[] listOfTransfers = transferService.getListOfTransfers();
+				console.printListOfTransfers(listOfTransfers);
 		
 				break;
 			case LOGIN_AS_DIFFERENT_USER:
@@ -142,6 +148,8 @@ public class App {
 				// this is what calls the server to retrieve a JWT token (if successful)
 				currentUser = authenticationService.login(credentials);
 				accountService.setAUTH_TOKEN(currentUser.getToken());
+				transferService.setAUTH_TOKEN(currentUser.getToken());
+//				userService.setAUTH_TOKEN(currentUser.getToken());
 				
 			} catch (AuthenticationServiceException e) {
 				System.out.println("LOGIN ERROR: " + e.getMessage());

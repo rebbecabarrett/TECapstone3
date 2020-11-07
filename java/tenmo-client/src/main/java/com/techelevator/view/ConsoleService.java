@@ -42,8 +42,7 @@ public class ConsoleService {
 		System.out.println("1.  View your current balance");
 		System.out.println("2.  Send TE bucks");
 		System.out.println("3.  View your past transfers");
-		System.out.println("4.  Login as different user");
-		System.out.println("5.  Exit");
+		System.out.println("4.  Exit");
 
 		return in.nextLine();
 

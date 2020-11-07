@@ -22,8 +22,7 @@ public class App {
 	private static final String GET_ACCOUNT_BALANCE = "1";
 	private static final String SEND_TE_BUCKS = "2";
 	private static final String VIEW_PAST_TRANSFERS = "3";
-	private static final String LOGIN_AS_DIFFERENT_USER = "4";
-	private static final String PROGRAM_EXIT = "5";
+	private static final String PROGRAM_EXIT = "4";
 
 	// we only want single instances of these. Be careful to not create multiple
 	// instances in your code. We just reuse what we have
@@ -136,8 +135,6 @@ public class App {
 				}
 		
 				break;
-			case LOGIN_AS_DIFFERENT_USER:
-				break;
 			case PROGRAM_EXIT:
 				System.out.println("Exiting... Good Bye!");
 				System.exit(1);
@@ -145,6 +142,7 @@ public class App {
 				System.out.println("Invalid Choice. Please try again!");
 
 			}
+		
 		}
 		
 	}

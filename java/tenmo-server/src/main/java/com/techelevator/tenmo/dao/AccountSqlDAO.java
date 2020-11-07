@@ -44,7 +44,7 @@ public class AccountSqlDAO implements AccountDAO {
 
 	@Override
 	public int getAccountIdFromUserId(int userId) {
-		Integer response = jdbcTemplate.queryForObject("SELECT DISTINCT accounts.account_id FROM accounts JOIN transfers ON transfers.account_to = accounts.account_id OR transfers.account_from = accounts.account_id WHERE accounts.user_id = ?", Integer.class, userId);
+		Integer response = jdbcTemplate.queryForObject("SELECT DISTINCT accounts.account_id FROM accounts JOIN users ON users.user_id = accounts.user_id WHERE accounts.user_id = ?", Integer.class, userId);
 	return response;
 	}
 	

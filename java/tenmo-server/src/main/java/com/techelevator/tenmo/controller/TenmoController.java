@@ -81,7 +81,7 @@ public class TenmoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping (path = "/transfers", method = RequestMethod.POST)
 	public Transfer transferFunds(@RequestBody Transfer transferRequest, Principal principal) {
-		Transfer returnedTransfer = transferRequest;
+		Transfer returnedTransfer = null;
 		int userId = userDAO.findIdByUsername(principal.getName());
 		transferRequest.setUserIdFrom(userId);
 		BigDecimal accountBalanceOfSender = accountDAO.getAccountBalance(userId);
@@ -101,7 +101,7 @@ public class TenmoController {
 		}
 		
 		
-		return null;
+		return returnedTransfer;
 	}
 	
 	

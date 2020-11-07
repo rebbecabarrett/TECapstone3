@@ -93,7 +93,7 @@ public class ConsoleService {
 			System.out.println("Please enter transfer id to view details (or press 0 to cancel):\n");
 			transferId = in.nextLine();
 
-			if (validateIntegerInput(transferId)) {
+			if (validateTransferIdInput(transferId, listOfTransfers)) {
 				valid = true;
 
 			} else {
@@ -103,6 +103,29 @@ public class ConsoleService {
 		return transferId;
 	}
 
+	private boolean validateTransferIdInput(String transferId, Transfer[] listOfTransfers) {
+		int input;
+
+		try {
+			input = Integer.parseInt(transferId);
+		} catch (Exception e) {
+			return false;
+		}
+
+		if (input == 0) {
+			return true;
+		}
+
+		for (Transfer t : listOfTransfers) {
+			if (t.getTransferId() == input) {
+
+				return true;
+			}
+
+		}
+		return false;
+	}
+
 	private boolean validateIntegerInput(String stringInput) {
 		int input;
 		try {
@@ -110,7 +133,7 @@ public class ConsoleService {
 		} catch (Exception e) {
 			return false;
 		}
-		if (input >= 0) {
+		if (input > 0) {
 			return true;
 		} else {
 			return false;
@@ -127,19 +150,49 @@ public class ConsoleService {
 
 	}
 
-	public Transfer sendDetailsSubMenuHandler(AuthenticatedUser currentUser) {
+	public Transfer sendDetailsSubMenuHandler(AuthenticatedUser currentUser, int response) {
 		Transfer requestTransfer = new Transfer();
-		System.out.println("\n");
-		System.out.println("Enter ID of user you are sending to:\n");
-		String userIdAsString = in.nextLine();
-		int userIdTo = Integer.parseInt(userIdAsString);
-		requestTransfer.setUserIdTo(userIdTo);
-		System.out.println("Enter Amount:\n");
-		String amountAsString = in.nextLine();
-		BigDecimal amount = new BigDecimal(amountAsString);
-		requestTransfer.setAmount(amount);
+		
+		requestTransfer.setUserIdTo(response);
+		
+		boolean validDollarAmount = false;
+
+		while (!validDollarAmount) {
+			System.out.println("Enter Amount:\n");
+			String amountAsString = in.nextLine();
+			if (validateIntegerInput(amountAsString)) {
+				BigDecimal amount = new BigDecimal(amountAsString);
+				requestTransfer.setAmount(amount);
+				validDollarAmount = true;
+			} else {
+			}
+		}
 
 		return requestTransfer;
+	}
+
+	private boolean validateUserIdInput(String userInput, User[] listOfUsers) {
+		int input;
+
+		try {
+			input = Integer.parseInt(userInput);
+		} catch (Exception e) {
+			return false;
+		}
+
+		if (input == 0) {
+			return true;
+		}
+
+		for (User u : listOfUsers) {
+			if (u.getId() == input) {
+
+				return true;
+			}
+
+		}
+		return false;
+
 	}
 
 	public void printListOfUsers(User[] listOfUsers, AuthenticatedUser currentUser) {
@@ -155,7 +208,34 @@ public class ConsoleService {
 			else {
 				System.out.printf("%-20s %-20s\n", listOfUsers[i].getId(), listOfUsers[i].getUsername());
 			}
+
 		}
+
+	}
+
+	public int getUserIdChoice(AuthenticatedUser currentUser, User[] listOfUsers) {
+		boolean valid = false;
+
+		while (!valid) {
+			System.out.println("\n");
+			System.out.println("Enter ID of user you are sending to (Press 0 to cancel):\n");
+			String userIdAsString = in.nextLine();
+			
+			if (Integer.parseInt(userIdAsString)==0) {
+				valid = true;
+				return Integer.parseInt(userIdAsString);
+			}
+			else if (validateUserIdInput(userIdAsString, listOfUsers)) {
+				int userIdTo = Integer.parseInt(userIdAsString);
+				valid = true;
+				return userIdTo;
+
+			} 
+			 else {
+
+			}
+		}
+		return 0;
 	}
 
 }

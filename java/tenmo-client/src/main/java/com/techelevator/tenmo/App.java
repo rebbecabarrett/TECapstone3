@@ -82,7 +82,7 @@ public class App {
 	}
 
 	private void mainMenu() {
-          
+        
 		while (true) {
 			String choice = console.printMainMenu(currentUser);
 
@@ -98,19 +98,32 @@ public class App {
 			case SEND_TE_BUCKS:
 				User[] listOfUsers = userService.getListOfUsers();
 				console.printListOfUsers(listOfUsers, currentUser);
-				Transfer requestTransfer = console.sendDetailsSubMenuHandler(currentUser);
-				Transfer returnedTransfer = transferService.transferFunds(requestTransfer);
-				console.printTransferDetails(returnedTransfer);
+				int response = console.getUserIdChoice(currentUser, listOfUsers);
+				Boolean finished = false;
+				while (!finished) {
+				if (response == 0) {
+					finished = true;
+				}
+				else {
+					Transfer requestTransfer = console.sendDetailsSubMenuHandler(currentUser, response);
+					Transfer returnedTransfer = transferService.transferFunds(requestTransfer);
+					if (returnedTransfer == null) {
+						System.out.println("Insufficient Funds");
+						finished = true;
+					} else {
+					console.printTransferDetails(returnedTransfer);
+					finished = true;
+				}}
+				}
 				break;
 				
 			case VIEW_PAST_TRANSFERS: 
 				System.out.println("Retrieving list of transfers ...");
 				Transfer[] listOfTransfers = transferService.getListOfTransfers();
 				int transferId = Integer.parseInt(console.printListOfTransfers(listOfTransfers, currentUser));
-				boolean finished = false;
+				finished = false;
 				while (!finished) {
 				if (transferId == 0) {
-					console.printMainMenu(currentUser);
 					finished = true;
 				}
 				for (Transfer t: listOfTransfers) {
@@ -124,7 +137,6 @@ public class App {
 		
 				break;
 			case LOGIN_AS_DIFFERENT_USER:
-				
 				break;
 			case PROGRAM_EXIT:
 				System.out.println("Exiting... Good Bye!");

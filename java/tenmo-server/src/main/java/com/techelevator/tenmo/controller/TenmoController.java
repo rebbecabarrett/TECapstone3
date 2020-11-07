@@ -20,6 +20,7 @@ import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDAO;
 import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.User;
+import com.techelevator.tenmo.model.UserAlreadyExistsException;
 
 @PreAuthorize("isAuthenticated()")
 @RestController
@@ -84,6 +85,7 @@ public class TenmoController {
 		int userId = userDAO.findIdByUsername(principal.getName());
 		transferRequest.setUserIdFrom(userId);
 		BigDecimal accountBalanceOfSender = accountDAO.getAccountBalance(userId);
+		
 		if (accountBalanceOfSender.compareTo(transferRequest.getAmount()) == 1) {
 			accountDAO.addMoneyToAccount(transferRequest.getUserIdTo(), transferRequest.getAmount());
 			accountDAO.withdrawMoneyFromAccount(transferRequest.getUserIdFrom(), transferRequest.getAmount());
@@ -95,11 +97,11 @@ public class TenmoController {
 			returnedTransfer.setTransferType("Send");
 			returnedTransfer.setUsernameFrom(principal.getName());
 			returnedTransfer.setUsernameTo(userDAO.getUsernameFromAccountId(accountIdTo));
-			//status message success confirmation id
-		} else {
-			//status message fail insufficient funds
+			return returnedTransfer;
 		}
-		return returnedTransfer;
+		
+		
+		return null;
 	}
 	
 	
